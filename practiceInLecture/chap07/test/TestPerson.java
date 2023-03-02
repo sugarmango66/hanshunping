@@ -1,3 +1,5 @@
+package practiceInLecture.chap07.test;
+
 /*
 定义Person类，里面有name、age属性，并提供compareTo比较方法，
 用于判断是否和另一个人相等，提供测试类TestPerson用于测试, 

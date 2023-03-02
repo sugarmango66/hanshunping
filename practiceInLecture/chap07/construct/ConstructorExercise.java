@@ -1,3 +1,5 @@
+package practiceInLecture.chap07.construct;
+
 public class ConstructorExercise {
     
 }
