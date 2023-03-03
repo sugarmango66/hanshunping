@@ -1,16 +1,16 @@
 package practiceInLecture.chap08.encap;
 
 public class Account {
-    public String name;
+    private String name;
     private double balance;
-    private Integer password;
+    private String password;
 
     //构造器
 
     public Account() {
     }
-    //构造器与setter结合使用
-    public Account(String name, double balance, Integer password) {
+    //构造器与setter结合使用 对初始化提供验证逻辑
+    public Account(String name, double balance, String password) {
         this.setName(name);
         this.setBalance(balance);
         this.setPassword(password);
@@ -26,7 +26,7 @@ public class Account {
             this.name = name;
         }
         else {
-            System.out.println("姓名长度不符合要求，设为默认值");
+            System.out.println("姓名长度在2位-4位，设为默认值无名");
             this.name = "无名";
         }
     }
@@ -38,20 +38,20 @@ public class Account {
     public void setBalance(double balance) {
         if (balance > 20) this.balance = balance;
         else {
-            System.out.println("余额不符合要求，设为默认值");
-            this.balance = 20.1;
+            System.out.println("余额应>20，设为默认值0");
+            this.balance = 0;
         }
     }
 
-    public int getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    public void setPassword(Integer password) {
-        if (password.toString().length() == 6) this.password = password;
+    public void setPassword(String password) {
+        if (password.length() == 6) this.password = password;
         else {
-            System.out.println("密码不符合要求，设为默认值");
-            this.password = 888888;
+            System.out.println("密码应为6位，设为默认值888888");
+            this.password = "888888";
         }
     }
     public String info() {
