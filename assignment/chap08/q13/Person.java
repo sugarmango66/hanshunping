@@ -40,8 +40,7 @@ public class Person {
     }
 
     public void print() {//打印基本信息
-        System.out.println(
-                "name: " + name +
+        System.out.println("name: " + name +
                 "\nage: " + age +
                 "\nsex: " + sex);
     }
@@ -55,6 +54,7 @@ class Student extends Person {
         super(name, sex, age);
         this.stuId = stuId;
     }
+
     //特有方法
     public void study() {
         System.out.println("我承诺，我会好好学习。");
@@ -65,14 +65,16 @@ class Student extends Person {
     public String play() {
         return super.play() + "足球";
     }
+
     @Override
     public void print() {
         System.out.println("Student info：");
         super.print();
-        System.out.println("stuId: "+stuId);
+        System.out.println("stuId: " + stuId);
     }
 
 }
+
 class Teacher extends Person {
     private int workAge;
 
@@ -80,6 +82,7 @@ class Teacher extends Person {
         super(name, sex, age);
         this.workAge = workAge;
     }
+
     public void teach() {
         System.out.println("我承诺，我会认真教课。");
     }
@@ -93,6 +96,6 @@ class Teacher extends Person {
     public void print() {
         System.out.println("Teacher info：");
         super.print();
-        System.out.println("workAge: "+workAge);
+        System.out.println("workAge: " + workAge);
     }
 }

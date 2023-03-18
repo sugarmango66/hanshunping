@@ -14,7 +14,7 @@ public class Main {
         //排序
         bubbleSort(people);
         //按要求打印输出
-        for (Person p: people) {
+        for (Person p : people) {
             p.print();
             act(p);
             System.out.println(p.play());
@@ -22,6 +22,7 @@ public class Main {
         }
 
     }
+
     //方法 根据对象类型调用study或teach
     public static void act(Person p) {
         if (p instanceof Student) {
@@ -31,6 +32,7 @@ public class Main {
             ((Teacher) p).teach();
         }
     }
+
     //按对象年龄从高到低冒泡排序
     public static void bubbleSort(ArrayList<Person> arr) {
         Person temp;
@@ -39,11 +41,11 @@ public class Main {
             //内循环 比较次数是轮数-i(每一轮得到的末尾最大值不需要再次比较)
             for (int j = 0; j < arr.size() - 1 - i; j++) {
                 //相邻两数比较，较小的向后放
-                if (arr.get(j).getAge() < arr.get(j+1).getAge()) {
+                if (arr.get(j).getAge() < arr.get(j + 1).getAge()) {
                     //交换
                     temp = arr.get(j);
-                    arr.set(j, arr.get(j+1));
-                    arr.set(j+1, temp);
+                    arr.set(j, arr.get(j + 1));
+                    arr.set(j + 1, temp);
                 }
             }
         }
