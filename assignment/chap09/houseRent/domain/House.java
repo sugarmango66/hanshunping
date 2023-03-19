@@ -1,6 +1,9 @@
 package assignment.chap09.houseRent.domain;
-
-//每个对象就是一个房屋信息
+/*
+domain/model层 数据实体
+每个对象就是一个房屋信息
+与业务层交互
+ */
 public class House {
     //根据界面分析出属性
     //编号 房主 电话 地址 月租 状态(未出租/已出租
@@ -70,7 +73,6 @@ public class House {
         this.state = state;
     }
     //重写toString 方便打印
-
     @Override
     public String toString() {
         return id + "\t\t" + ownerName + "\t\t" + tel + "\t\t" +
