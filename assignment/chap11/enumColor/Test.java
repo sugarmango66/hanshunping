@@ -9,9 +9,8 @@ public class Test {
         Color c = Color.BLUE;
         c.show();
         switch (c) {
-            case RED -> System.out.println("匹配红色");
-            case BLUE -> System.out.println("匹配蓝色");
-            case YELLOW -> System.out.println("匹配黄色");
+            case RED,YELLOW -> System.out.println("匹配暖色");
+            case BLUE,BLACK,GREEN -> System.out.println("匹配冷色");
             default -> System.out.println("未匹配到");
         }
     }
