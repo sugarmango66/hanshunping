@@ -32,3 +32,5 @@ replay_pid*
 *.iml
 .idea
 out
+
+TryDraft.java
