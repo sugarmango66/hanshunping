@@ -45,18 +45,18 @@ public class MyDate implements Comparable<MyDate> {
     }
 
     @Override
-    public int compareTo(MyDate date) {
-        if (date == null) {
+    public int compareTo(MyDate other) {
+        if (other == null) {
             throw new NullPointerException();
         }
-        int diff = this.year - date.year;
-        if (diff != 0) {
-            return diff;
+        int diff = this.year - other.year;
+        if (diff == 0) {
+            diff = this.month - other.month;
+            if (diff == 0) {
+                diff = this.day - other.day;
+            }
         }
-        if ((diff = this.month - date.month) != 0) {
-            return diff;
-        }
-        return this.day - date.day;
+        return diff;
     }
 }
 
