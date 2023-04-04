@@ -10,11 +10,9 @@ import java.util.Vector;
 
 class MyPanel extends JPanel implements KeyListener {
     MyTank myTank;
-//    Enemy enemy1;
-//    Enemy enemy2;
-//    Enemy enemy3;
     //敌方tank多 考虑集合 用Vector 线程安全
     Vector<Enemy> enemies;
+    int enemyInitCount = 3;
 
 //    int direct = 0;//direct加入Tank成员属性
 
@@ -23,16 +21,16 @@ class MyPanel extends JPanel implements KeyListener {
         //设定speed
         myTank.setSpeed(10);
 
+        //创建集合容纳敌方tank
         enemies = new Vector<>();
-        enemies.add(new Enemy(300, 300));
-        enemies.add(new Enemy(400, 300));
-        enemies.add(new Enemy(500, 300));
-        Iterator<Enemy> iterator = enemies.iterator();
-        while (iterator.hasNext()) {
-            Enemy next = iterator.next();
-            next.setSpeed(5);
+        for (int i = 0; i < enemyInitCount; i++) {
+            //创建一个敌方tank
+            Enemy enemy = new Enemy(100 * (i + 1), 0);
+            //设定方向
+            enemy.setDirect(2);
+            //加入集合
+            enemies.add(enemy);
         }
-
 
     }
 
@@ -43,7 +41,7 @@ class MyPanel extends JPanel implements KeyListener {
         paintTank(myTank.getX(), myTank.getY(), 0, myTank.getDirect(), g);
         for (Enemy enemy : enemies) {
             paintTank(enemy.getX(), enemy.getY(), 1, enemy.getDirect(), g);
-            enemy.moveUp();
+//            enemy.moveUp();
         }
     }
 

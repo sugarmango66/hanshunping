@@ -12,7 +12,7 @@ public class Game01 extends JFrame {
         mp = new MyPanel();
         this.add(mp);
         this.addKeyListener(mp);//frame加入listener 面板
-        this.setSize(600,600);
+        this.setSize(1000,1000);
         this.setVisible(true);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
