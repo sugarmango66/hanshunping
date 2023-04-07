@@ -9,15 +9,14 @@ public class Tank {
     //移动速度
     private int speed = 1;
 
-
     public Tank(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
+
     //上右下左移动方法
     public void moveUp() {
-//        y -= 2;//增减幅度影响速度 加入成员属性
         y -= speed;
     }
 

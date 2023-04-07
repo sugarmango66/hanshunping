@@ -2,25 +2,21 @@ package assignment.chap18.tankGame04;
 
 public class Bullet implements Runnable {
 
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
     private int speed = 5;
     private int direct;
-    private boolean isAlive = true;
-//    Tank owner = null;
+    protected boolean isAlive = true;
 
-    public boolean isAlive() {
-        return isAlive;
-    }
 
     public Bullet(int x, int y, int direct) {
         this.x = x;
         this.y = y;
         this.direct = direct;
-//        this.owner = owner;
+
 
     }
-    private void bulletMove() {
+    protected void bulletMove() {
         switch (direct) {
             case 0:
                 y -= speed;
@@ -38,10 +34,7 @@ public class Bullet implements Runnable {
                 System.out.println("invalid");
         }
     }
-//    private boolean isHitEnemy() {
-//        //todo
-//        return true;
-//    }
+
 
     @Override
     public void run() {
@@ -58,13 +51,6 @@ public class Bullet implements Runnable {
                 isAlive = false;//this bullet生命周期结束
                 break;//线程结束
             }
-            //判断是否击中敌方
-//            if (isHitEnemy()) {
-//                //bullet dead, 从Collection中remove bullet
-//                this.isAlive = false;
-//
-//                //enemy dead, 从Collection中remove enemy
-//            }
 
             //坐标改变
             bulletMove();

@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Vector;
 
 //要实现bullet移动效果 老师的方法-MyPanel做成线程类 一定间隔repaint.!!注意启动
@@ -17,7 +18,7 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
 
 
     public MyPanel() {
-        myTank = new MyTank(100, 300);
+        myTank = new MyTank(100, 300, this);
         //设定speed
         myTank.setSpeed(10);
 
@@ -28,7 +29,7 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
             Enemy enemy = new Enemy(100 * (i + 1), 0);
             //设定方向
             enemy.setDirect(2);
-            new Thread(enemy).start();
+            new Thread(enemy).start();//线程内不断发射子弹
             //加入集合
             enemies.add(enemy);
         }
@@ -39,21 +40,37 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
     public void paint(Graphics g) {
         super.paint(g);
         g.fillRect(0, 0, 600, 600);//填充矩形，默认黑色
-        paintTank(myTank.getX(), myTank.getY(), 0, myTank.getDirect(), g);
 
-        for (Enemy enemy : enemies) {
+        paintTank(myTank.getX(), myTank.getY(), 0, myTank.getDirect(), g);//画我方
+
+        Iterator<Enemy> iterEnemies = enemies.iterator();
+        while (iterEnemies.hasNext()) {
+            Enemy enemy = iterEnemies.next();
+            if (enemy == null || !enemy.isAlive) {
+                iterEnemies.remove();
+                continue;
+            }
             paintTank(enemy.getX(), enemy.getY(), 1, enemy.getDirect(), g);
+
             HashSet<Bullet> enemyBullets = enemy.bullets;
-            for (Bullet enemyBullet : enemyBullets) {
-                if (enemyBullet != null && enemyBullet.isAlive()) {
+            Iterator<Bullet> iterator = enemyBullets.iterator();
+            while (iterator.hasNext()) {
+                Bullet enemyBullet = iterator.next();
+                if (enemyBullet != null && enemyBullet.isAlive) {
                     paintBullet(enemyBullet.getX(), enemyBullet.getY(), 1, g);
+                }
+                else {
+                    iterator.remove();//avoid ConcurrentModificationException
                 }
             }
         }
-//        Bullet myTankBullet = myTank.getBullet();
-        HashSet<Bullet> bullets = myTank.bullets;
-        for (Bullet myTankBullet : bullets) {//画出all alive bullet
-            if (myTankBullet != null && myTankBullet.isAlive()) {
+        for (Enemy enemy : enemies) {
+
+        }
+
+        HashSet<MyBullet> bullets = myTank.bullets;
+        for (MyBullet myTankBullet : bullets) {//画出all alive bullet
+            if (myTankBullet != null && myTankBullet.isAlive) {
                 paintBullet(myTankBullet.getX(), myTankBullet.getY(), 0, g);
             }
         }
@@ -114,7 +131,7 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
     public void paintBullet(int x, int y, int type, Graphics g) {
         if (type == 0) {
             g.setColor(Color.CYAN);
-        } else if (type ==  1){
+        } else if (type == 1) {
             g.setColor(Color.YELLOW);
         }
         g.fillOval(x, y, 2, 2);
@@ -156,7 +173,7 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
     }
 
     @Override
-    public void run() {
+    public void run() {//自动repaint
         while (true) {
             try {
                 Thread.sleep(100);

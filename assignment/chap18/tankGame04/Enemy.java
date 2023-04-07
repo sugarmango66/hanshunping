@@ -5,27 +5,26 @@ import java.util.HashSet;
 public class Enemy extends Tank implements Runnable {
     private Bullet bullet = null;
     HashSet<Bullet> bullets = new HashSet<>();
-    private boolean isAlive = true;
+    protected boolean isAlive = true;
 
     public Enemy(int x, int y) {
         super(x, y);
     }
 
-
     public void fire() {
         //创建bullet 根据tank朝向决定bullet的起始位置和方向
         switch (this.getDirect()) {
             case 0:
-                bullet = new Bullet(getX() + 20, getY(), 0);
+                bullet = new Bullet(getX()+20,getY(),0);
                 break;
             case 1:
-                bullet = new Bullet(getX() + 60, getY() + 20, 1);
+                bullet = new Bullet(getX()+60,getY()+20,1);
                 break;
             case 2:
-                bullet = new Bullet(getX() + 20, getY() + 60, 2);
+                bullet = new Bullet(getX()+20,getY()+60,2);
                 break;
             case 3:
-                bullet = new Bullet(getX(), getY() + 20, 3);
+                bullet = new Bullet(getX(),getY()+20,3);
                 break;
         }
         bullets.add(bullet);
@@ -43,9 +42,5 @@ public class Enemy extends Tank implements Runnable {
                 e.printStackTrace();
             }
         }
-    }
-
-    public boolean isAlive() {
-        return isAlive;
     }
 }

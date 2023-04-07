@@ -11,7 +11,7 @@ public class Game04 extends JFrame {
     MyPanel mp;
     public Game04() {
         mp = new MyPanel();
-        new Thread(mp).start();
+        new Thread(mp).start();//线程内自动repaint
         this.add(mp);
         this.addKeyListener(mp);//frame加入listener 面板
         this.setSize(600,600);
