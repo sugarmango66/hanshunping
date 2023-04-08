@@ -64,9 +64,6 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
                 }
             }
         }
-        for (Enemy enemy : enemies) {
-
-        }
 
         HashSet<MyBullet> bullets = myTank.bullets;
         for (MyBullet myTankBullet : bullets) {//画出all alive bullet

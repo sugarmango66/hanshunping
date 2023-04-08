@@ -4,7 +4,7 @@ public class Bullet implements Runnable {
 
     protected int x;
     protected int y;
-    private int speed = 5;
+    private int speed = 10;
     private int direct;
     protected boolean isAlive = true;
 
@@ -38,7 +38,7 @@ public class Bullet implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("thread run");
+//        System.out.println("thread run");
         while (true) {//bullet move
             try {
                 Thread.sleep(100);
@@ -56,7 +56,7 @@ public class Bullet implements Runnable {
             bulletMove();
 //            System.out.println("bullet at " + x + " " + y);
         }
-        System.out.println("thread end");
+//        System.out.println("thread end");
     }
 
     public int getX() {
