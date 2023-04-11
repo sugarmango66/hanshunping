@@ -4,7 +4,7 @@ import java.util.*;
 
 public class MyTank extends Tank {
     private MyBullet bullet = null;
-    HashSet<MyBullet> bullets = new HashSet<>();
+    Vector<MyBullet> bullets = new Vector<>();
     MyPanel mp;
     public MyTank(int x, int y, MyPanel mp) {
         super(x, y);

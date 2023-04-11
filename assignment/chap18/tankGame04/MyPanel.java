@@ -43,16 +43,18 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
 
         paintTank(myTank.getX(), myTank.getY(), 0, myTank.getDirect(), g);//画我方
 
-        Iterator<Enemy> iterEnemies = enemies.iterator();
-        while (iterEnemies.hasNext()) {
-            Enemy enemy = iterEnemies.next();
+//        Iterator<Enemy> iterEnemies = enemies.iterator();
+//        while (iterEnemies.hasNext()) {
+        for (Enemy enemy: enemies){
+//            Enemy enemy = iterEnemies.next();
             if (enemy == null || !enemy.isAlive) {
-                iterEnemies.remove();
+//                iterEnemies.remove();
+                enemies.remove(enemy);
                 continue;
             }
             paintTank(enemy.getX(), enemy.getY(), 1, enemy.getDirect(), g);
 
-            HashSet<Bullet> enemyBullets = enemy.bullets;
+            Vector<Bullet> enemyBullets = enemy.bullets;
             Iterator<Bullet> iterator = enemyBullets.iterator();
             while (iterator.hasNext()) {
                 Bullet enemyBullet = iterator.next();
@@ -65,7 +67,7 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
             }
         }
 
-        HashSet<MyBullet> bullets = myTank.bullets;
+        Vector<MyBullet> bullets = myTank.bullets;
         for (MyBullet myTankBullet : bullets) {//画出all alive bullet
             if (myTankBullet != null && myTankBullet.isAlive) {
                 paintBullet(myTankBullet.getX(), myTankBullet.getY(), 0, g);
@@ -126,10 +128,9 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
     }
 
     public void paintBullet(int x, int y, int type, Graphics g) {
-        if (type == 0) {
-            g.setColor(Color.CYAN);
-        } else if (type == 1) {
-            g.setColor(Color.YELLOW);
+        switch (type) {
+            case 0 -> g.setColor(Color.CYAN);
+            case 1 -> g.setColor(Color.ORANGE);
         }
         g.fillOval(x, y, 2, 2);
     }
@@ -145,17 +146,25 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
             //改变朝向
             myTank.setDirect(0);
             //修改坐标
-            myTank.moveUp();
+            if (myTank.getY() >= 0 + myTank.getSpeed()) {//bound y==0
+                myTank.moveUp();
+            }
 
         } else if (e.getKeyCode() == KeyEvent.VK_S) {
             myTank.setDirect(2);
-            myTank.moveDown();
+            if (myTank.getY() <= 600 - 60 - myTank.getSpeed()) {//bound y==600
+                myTank.moveDown();
+            }
         } else if (e.getKeyCode() == KeyEvent.VK_A) {
             myTank.setDirect(3);
-            myTank.moveLeft();
+            if (myTank.getX() >= 0 + myTank.getSpeed()) {//bound x==0
+                myTank.moveLeft();
+            }
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
             myTank.setDirect(1);
-            myTank.moveRight();
+            if (myTank.getX() <= 600 - 60 - myTank.getSpeed()) {//bound x==600
+                myTank.moveRight();
+            }
         }
         this.repaint();//!!!勿忘重绘面板
 

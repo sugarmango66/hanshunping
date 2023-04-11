@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class Enemy extends Tank implements Runnable {
     private Bullet bullet = null;
-    HashSet<Bullet> bullets = new HashSet<>();
+    Vector<Bullet> bullets = new Vector<>();
     protected boolean isAlive = true;
 
     public Enemy(int x, int y) {
@@ -48,12 +48,17 @@ public class Enemy extends Tank implements Runnable {
 //            }
 
             // 随机移动
+            int upperBound = 0;
+            int lowerBound = 300;
+            int leftBound = 0;
+            int rightBound = 600;
+
             int nextDirect = (int) (Math.random() * 4);//0-3 random int
             setDirect(nextDirect);
             this.setSpeed((int) (Math.random() * 2) + 3);
             switch (nextDirect) {
                 case 0:
-                    if (getY() <= 0 + getSpeed() * 10) {//bound y==0
+                    if (getY() <= upperBound + getSpeed() * 10) {//bound y==0
                         continue;
                     }
 
@@ -68,7 +73,7 @@ public class Enemy extends Tank implements Runnable {
                     }
                     break;
                 case 1:
-                    if (getX() >= 600 - 60 - getSpeed() * 10) {//bound x==600
+                    if (getX() >= rightBound - 60 - getSpeed() * 10) {//bound x==600
                         continue;
                     }
 
@@ -82,7 +87,7 @@ public class Enemy extends Tank implements Runnable {
                     }
                     break;
                 case 2:
-                    if (getY() >= 300 - 60 - getSpeed() * 10) {//bound y==300
+                    if (getY() >= lowerBound - 60 - getSpeed() * 10) {//bound y==300
                         continue;
                     }
                     for (int i = 0; i < 10; i++) {
@@ -95,7 +100,7 @@ public class Enemy extends Tank implements Runnable {
                     }
                     break;
                 case 3:
-                    if (getX() <= 0 + getSpeed() * 10) {//bound x==0
+                    if (getX() <= leftBound + getSpeed() * 10) {//bound x==0
                         continue;
                     }
                     for (int i = 0; i < 10; i++) {
