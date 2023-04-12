@@ -34,7 +34,7 @@ public class Enemy extends Tank implements Runnable {
 
     @Override
     public void run() {
-        while (true) {
+        while (isAlive) {//生命周期结束就退出线程
 
             //连续发射子弹
 //            for (int i = 0; i < (int) (Math.random() * 3+1); i++) {
@@ -49,22 +49,20 @@ public class Enemy extends Tank implements Runnable {
 
             // 随机移动
             int upperBound = 0;
-            int lowerBound = 300;
+            int lowerBound = 600;
             int leftBound = 0;
             int rightBound = 600;
 
             int nextDirect = (int) (Math.random() * 4);//0-3 random int
+//            nextDirect = 3;
             setDirect(nextDirect);
             this.setSpeed((int) (Math.random() * 2) + 3);
             switch (nextDirect) {
                 case 0:
-                    if (getY() <= upperBound + getSpeed() * 10) {//bound y==0
-                        continue;
-                    }
-
                     for (int i = 0; i < 10; i++) {
-
-                        moveUp();
+                        if (getY() > upperBound + getSpeed()) {
+                            moveUp();
+                        }
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
@@ -73,12 +71,10 @@ public class Enemy extends Tank implements Runnable {
                     }
                     break;
                 case 1:
-                    if (getX() >= rightBound - 60 - getSpeed() * 10) {//bound x==600
-                        continue;
-                    }
-
                     for (int i = 0; i < 10; i++) {
-                        moveRight();
+                        if (getX() < rightBound - 60 - getSpeed()) {
+                            moveRight();
+                        }
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
@@ -87,11 +83,10 @@ public class Enemy extends Tank implements Runnable {
                     }
                     break;
                 case 2:
-                    if (getY() >= lowerBound - 60 - getSpeed() * 10) {//bound y==300
-                        continue;
-                    }
                     for (int i = 0; i < 10; i++) {
-                        moveDown();
+                        if (getY() < lowerBound - 60 - getSpeed()) {
+                            moveDown();
+                        }
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
@@ -100,19 +95,16 @@ public class Enemy extends Tank implements Runnable {
                     }
                     break;
                 case 3:
-                    if (getX() <= leftBound + getSpeed() * 10) {//bound x==0
-                        continue;
-                    }
                     for (int i = 0; i < 10; i++) {
-                        moveLeft();
+                        if (getX() > leftBound + getSpeed()) {
+                            moveLeft();
+                        }
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
                     }
-                    break;
-                default:
                     break;
             }
             this.fire();

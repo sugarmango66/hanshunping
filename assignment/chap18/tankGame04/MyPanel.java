@@ -5,7 +5,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -15,6 +14,11 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
     //敌方tank多 考虑集合 用Vector 线程安全
     Vector<Enemy> enemies;
     int enemyInitCount = 3;
+    Vector<Bomb> bombs;//爆炸集合变量
+    //展示爆炸不同生命阶段的图片
+    Image image1 = null;
+    Image image2 = null;
+    Image image3 = null;
 
 
     public MyPanel() {
@@ -34,26 +38,36 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
             enemies.add(enemy);
         }
 
+        //创建集合容纳爆炸。当mybullet hit enemy 创建爆炸对象-见MyBullet类
+        bombs = new Vector<Bomb>();
+        //加载图片 文件放在out-Production-keyboardDance下面 即proj root
+        image1 = Toolkit.getDefaultToolkit().getImage(MyPanel.class.getResource("/bomb_1.gif"));
+        image2 = Toolkit.getDefaultToolkit().getImage(MyPanel.class.getResource("/bomb_2.gif"));
+        image3 = Toolkit.getDefaultToolkit().getImage(MyPanel.class.getResource("/bomb_3.gif"));
     }
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
         g.fillRect(0, 0, 600, 600);//填充矩形，默认黑色
+        //画我方tank
+        paintTank(myTank.getX(), myTank.getY(), 0, myTank.getDirect(), g);
+        //画mytank发射的bullet
+        Vector<MyBullet> bullets = myTank.bullets;
+        for (MyBullet myTankBullet : bullets) {//画出all alive bullet
+            if (myTankBullet != null && myTankBullet.isAlive) {
+                paintBullet(myTankBullet.getX(), myTankBullet.getY(), 0, g);
+            }
+        }
 
-        paintTank(myTank.getX(), myTank.getY(), 0, myTank.getDirect(), g);//画我方
-
-//        Iterator<Enemy> iterEnemies = enemies.iterator();
-//        while (iterEnemies.hasNext()) {
+        //画敌方tank
         for (Enemy enemy: enemies){
-//            Enemy enemy = iterEnemies.next();
             if (enemy == null || !enemy.isAlive) {
-//                iterEnemies.remove();
                 enemies.remove(enemy);
                 continue;
             }
             paintTank(enemy.getX(), enemy.getY(), 1, enemy.getDirect(), g);
-
+            //画enemy发射的all alive bullets
             Vector<Bullet> enemyBullets = enemy.bullets;
             Iterator<Bullet> iterator = enemyBullets.iterator();
             while (iterator.hasNext()) {
@@ -67,12 +81,27 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
             }
         }
 
-        Vector<MyBullet> bullets = myTank.bullets;
-        for (MyBullet myTankBullet : bullets) {//画出all alive bullet
-            if (myTankBullet != null && myTankBullet.isAlive) {
-                paintBullet(myTankBullet.getX(), myTankBullet.getY(), 0, g);
+        //画爆炸
+        Iterator<Bomb> bombIterator = bombs.iterator();
+        while (bombIterator.hasNext()) {
+            Bomb bomb =  bombIterator.next();
+            if (bomb != null && bomb.isAlive) {
+                if (bomb.energy >7) {
+                    g.drawImage(image1, bomb.x, bomb.y, 60, 60, this);
+                }
+                else if (bomb.energy > 3) {
+                    g.drawImage(image2, bomb.x, bomb.y,60,60,this);
+                }
+                else {
+                    g.drawImage(image3, bomb.x, bomb.y,60,60,this);
+                }
+                bomb.energyRelease();
+                if (!bomb.isAlive) {
+                    bombIterator.remove();
+                }
             }
         }
+
     }
 
 

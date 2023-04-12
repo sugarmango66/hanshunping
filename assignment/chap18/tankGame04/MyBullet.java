@@ -5,14 +5,13 @@ import java.util.Vector;
 
 public class MyBullet extends Bullet {
     MyTank owner = null;
-    boolean loop = true;
 
     public MyBullet(int x, int y, int direct, MyTank owner) {
         super(x, y, direct);
         this.owner = owner;
     }
 
-    private boolean isHitEnemy(Enemy enemy) {
+    public boolean isHitEnemy(Enemy enemy) {
         //here we decide only when bullet hit tank body(center rectangle) it is hit.
         int enemyX = enemy.getX();
         int enemyY = enemy.getY();
@@ -39,7 +38,7 @@ public class MyBullet extends Bullet {
     @Override
     public void run() {
         System.out.println("thread run");
-        while (loop) {
+        while (isAlive) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
@@ -60,13 +59,16 @@ public class MyBullet extends Bullet {
                 Enemy enemy = iterator.next();
                 if (enemy != null && isHitEnemy(enemy)) {
                     //bullet dead, 从Collection中remove bullet
-                    this.isAlive = false;
+                    this.isAlive = false;//!!!确保bullet hit first tank就终止线程。否则 不会再画出bullet 但能继续打中。
                     this.owner.bullets.remove(this);
 
                     //enemy dead, 从Collection中remove enemy
                     enemy.isAlive = false;
                     iterator.remove();
-                    loop = false;//!!!确保bullet hit first tank就终止线程。否则 不会再画出 但能继续打中。
+                    //new bomb, add to collection
+                    Bomb bomb = new Bomb(enemy.getX(), enemy.getY());
+                    this.owner.mp.bombs.add(bomb);
+
                     break;
                 }
             }
