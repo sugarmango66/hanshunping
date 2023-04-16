@@ -13,6 +13,10 @@ public class MyTank extends Tank {
 
 
     public void fire() {
+        //面板最多出现5个 mybullet
+        if (bullets.size() >= 5) {
+            return;
+        }
         //创建bullet 根据tank朝向决定bullet的起始位置和方向
         switch (this.getDirect()) {
             case 0:

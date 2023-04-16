@@ -10,30 +10,30 @@ public class MyBullet extends Bullet {
         super(x, y, direct);
         this.owner = owner;
     }
-
-    public boolean isHitEnemy(Enemy enemy) {
-        //here we decide only when bullet hit tank body(center rectangle) it is hit.
-        int enemyX = enemy.getX();
-        int enemyY = enemy.getY();
-
-        switch (enemy.getDirect()) {
-            case 0:
-            case 2:
-                if (x >= enemyX + 10 && x <= enemyX + 30 && y >= enemyY + 10 && y <= enemyY + 50) {
-                    return true;
-                }
-                break;
-            case 1:
-            case 3:
-                if (x >= enemyX + 10 && x <= enemyX + 50 && y >= enemyY + 10 && y <= enemyY + 30) {
-                    return true;
-                }
-                break;
-            default:
-                System.out.println("invalid direct");
-        }
-        return false;
-    }
+    //和isHitMine()有几乎一样的逻辑，所以将两个方法优化合并为一个 即isHitTank()
+//    public boolean isHitEnemy(Tank enemy) {
+//        //here we decide only when bullet hit tank body(center rectangle) it is hit.
+//        int enemyX = enemy.getX();
+//        int enemyY = enemy.getY();
+//
+//        switch (enemy.getDirect()) {
+//            case 0:
+//            case 2:
+//                if (x >= enemyX + 10 && x <= enemyX + 30 && y >= enemyY + 10 && y <= enemyY + 50) {
+//                    return true;
+//                }
+//                break;
+//            case 1:
+//            case 3:
+//                if (x >= enemyX + 10 && x <= enemyX + 50 && y >= enemyY + 10 && y <= enemyY + 30) {
+//                    return true;
+//                }
+//                break;
+//            default:
+//                System.out.println("invalid direct");
+//        }
+//        return false;
+//    }
 
     @Override
     public void run() {
@@ -57,7 +57,7 @@ public class MyBullet extends Bullet {
             Iterator<Enemy> iterator = enemies.iterator();
             while (iterator.hasNext()) {
                 Enemy enemy = iterator.next();
-                if (enemy != null && isHitEnemy(enemy)) {
+                if (MyPanel.isHitTank(this, enemy)) {
                     //bullet dead, 从Collection中remove bullet
                     this.isAlive = false;//!!!确保bullet hit first tank就终止线程。否则 不会再画出bullet 但能继续打中。
                     this.owner.bullets.remove(this);

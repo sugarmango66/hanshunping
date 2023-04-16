@@ -50,15 +50,30 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
     public void paint(Graphics g) {
         super.paint(g);
         g.fillRect(0, 0, 600, 600);//填充矩形，默认黑色
-        //画我方tank
-        paintTank(myTank.getX(), myTank.getY(), 0, myTank.getDirect(), g);
-        //画mytank发射的bullet
-        Vector<MyBullet> bullets = myTank.bullets;
-        for (MyBullet myTankBullet : bullets) {//画出all alive bullet
-            if (myTankBullet != null && myTankBullet.isAlive) {
-                paintBullet(myTankBullet.getX(), myTankBullet.getY(), 0, g);
+
+        if (myTank != null) {
+            //画我方tank
+            paintTank(myTank.getX(), myTank.getY(), 0, myTank.getDirect(), g);
+            //画mytank发射的bullet
+            Vector<MyBullet> bullets = myTank.bullets;
+            Iterator<MyBullet> myBulletIterator = bullets.iterator();
+            while (myBulletIterator.hasNext()) {
+                MyBullet myBullet = myBulletIterator.next();
+                if (myBullet != null && myBullet.isAlive) {
+                    paintBullet(myBullet.getX(), myBullet.getY(), 0, g);
+                } else {
+                    myBulletIterator.remove();
+                }
             }
         }
+        //cause ConcurrentModificationException
+//        for (MyBullet myTankBullet : bullets) {//画出all alive bullet
+//            if (myTankBullet != null && myTankBullet.isAlive) {
+//                paintBullet(myTankBullet.getX(), myTankBullet.getY(), 0, g);
+//            }else {
+//                bullets.remove(myTankBullet);
+//            }
+//        }
 
         //画敌方tank
         for (Enemy enemy: enemies){
@@ -171,6 +186,9 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (myTank == null) {
+            return;
+        }
         if (e.getKeyCode() == KeyEvent.VK_W) {
             //改变朝向
             myTank.setDirect(0);
@@ -207,6 +225,57 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
 
     }
 
+    //某子弹是否击中某tank
+    protected static boolean isHitTank(Bullet bullet, Tank tank) {
+        if (tank == null) {
+            return false;
+        }
+        //here we decide only when bullet hit tank body(center rectangle) it is hit.
+        int tankX = tank.getX();
+        int tankY = tank.getY();
+
+        switch (tank.getDirect()) {
+            case 0:
+            case 2:
+                if (bullet.x >= tank.getX() + 10 && bullet.x <= tankX + 30 && bullet.y >= tankY + 10 && bullet.y <= tankY + 50) {
+                    return true;
+                }
+                break;
+            case 1:
+            case 3:
+                if (bullet.x >= tankX + 10 && bullet.x <= tankX + 50 && bullet.y >= tankY + 10 && bullet.y <= tankY + 30) {
+                    return true;
+                }
+                break;
+            default:
+                System.out.println("invalid direct");
+        }
+        return false;
+    }
+
+    //mytank被击中的consequence
+    public void afterMineHit() {
+        if (myTank != null) {
+            int myTankX = myTank.getX();
+            int myTankY = myTank.getY();
+
+            //判断mytank 是否被某子弹击中
+            //是-enemybullet dead, mytank dead, new bomb
+            //遍历enemy 取子弹
+            for (Enemy enemy : enemies) {
+                Vector<Bullet> bullets = enemy.bullets;
+                for (Bullet bullet : bullets) {
+                    if (isHitTank(bullet, myTank)) {
+                        bullet.isAlive = false;
+                        Bomb bomb = new Bomb(myTankX, myTankY);
+                        bombs.add(bomb);
+                        myTank = null;
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void run() {//自动repaint
         while (true) {
@@ -215,6 +284,9 @@ class MyPanel extends JPanel implements KeyListener, Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+//            afterEnemyHit();
+            afterMineHit();
             this.repaint();
         }
     }

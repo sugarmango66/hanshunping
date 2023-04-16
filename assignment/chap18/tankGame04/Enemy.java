@@ -28,7 +28,7 @@ public class Enemy extends Tank implements Runnable {
                 bullet = new Bullet(getX(), getY() + 20, 3);
                 break;
         }
-        bullets.add(bullet);
+        bullets.add(bullet);//加入集合
         new Thread(bullet).start();//启动线程
     }
 
@@ -107,7 +107,10 @@ public class Enemy extends Tank implements Runnable {
                     }
                     break;
             }
-            this.fire();
+            //限制n子弹消亡后才能发射新子弹 即面板上最多有n颗子弹
+            if (bullets.size() <= 0) {//n-1
+                this.fire();
+            }
 
         }
     }
